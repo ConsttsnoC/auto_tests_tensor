@@ -1,0 +1,76 @@
+import time
+import pytest
+from selenium.webdriver.common.by import By
+from tests.pages.base_page import BasePage
+from tests.pages.locators import Locators
+
+
+class SbisSite(BasePage):
+    """
+        Класс для тестирования функциональности сайта СБИС.
+
+        Этот класс содержит методы для взаимодействия с различными элементами на сайте СБИС,
+        а также для выполнения проверок.
+    """
+    def test_first_scenario(self):
+        """
+                Первый сценарий тестирования.
+
+                Этот тестовый сценарий включает следующие шаги:
+                1. Нажатие на кнопку "Контакты".
+                2. Нажатие на баннер клиента.
+                3. Переключение на новую вкладку.
+                4. Прокрутка к основному блоку контента.
+                5. Ожидание появления текста "Сила в людях" в основном блоке контента.
+                6. Нажатие на кнопку "Подробнее".
+                7. Проверка, что текущий URL соответствует ожидаемому URL.
+                8. Прокрутка к блоку "Работа".
+                9. Проверка, что все изображения в блоке имеют одинаковую ширину и высоту.
+
+                Если какой-либо из шагов завершится неудачно, тест зафиксирует ошибку.
+        """
+        try:
+            self.find_and_click_element(Locators.CONTACTS_BUTTON)
+            self.find_and_click_element(Locators.CLIENT_BANNER)
+            time.sleep(1) #ожидание полной загрузки элемента
+
+            # Переключаемся на последнюю вкладку
+            self.switch_to_last_tab()
+
+            self.scroll_to_element(Locators.MAIN_CONTENT_BLOCK)
+            self.wait_for_text_in_element(Locators.MAIN_CONTENT_BLOCK, "Сила в людях", 10)
+            time.sleep(1) #ожидание полной загрузки элемента
+
+            self.find_and_click_element(Locators.DETAILS_BUTTON)
+            self.assert_url_is_equal("https://tensor.ru/about")
+
+            self.scroll_to_element(Locators.WORK_BLOCK)
+            self.assert_all_images_equal()
+
+        except Exception as e:
+            pytest.fail(f"Ошибка теста: {e}")
+
+    def assert_all_images_equal(self):
+        """
+                Проверка, что все изображения в указанном блоке имеют одинаковую ширину и высоту.
+
+                Эта функция находит все изображения в блоке, определенном локатором IMAGES_BLOCK,
+                и проверяет, что их ширина и высота одинаковы. Если изображения не найдены,
+                тест завершается с ошибкой. Если размеры изображений различаются, тест также
+                завершается с ошибкой, выводя информацию о несоответствии.
+        """
+        block = self.driver.find_element(*Locators.IMAGES_BLOCK)
+        images = block.find_elements(By.CSS_SELECTOR, 'img')
+
+        if not images:
+            pytest.fail("Изображения не найдены")
+
+        first_width = images[0].get_attribute('width')
+        first_height = images[0].get_attribute('height')
+
+        for img in images:
+            width = img.get_attribute('width')
+            height = img.get_attribute('height')
+            print(f'Width: {width}, Height: {height}')
+            assert width == first_width, f'Несоответствие ширины: {width} != {first_width}'
+            assert height == first_height, f'Несоответствие высоты: {height} != {first_height}'
