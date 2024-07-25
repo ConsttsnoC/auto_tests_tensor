@@ -8,9 +8,14 @@ class BasePage:
     def __init__(self, driver: WebDriver):
         self.driver = driver
 
-    def find_element(self, by: By, value: str):
-        """Находит один элемент на странице по указанным параметрам."""
-        return self.driver.find_element(by, value)
+    def find_element(self, locator: tuple):
+        """
+        Находит один элемент на странице по указанным параметрам.
+
+        :param locator: Кортеж, содержащий способ поиска элемента и значение для поиска.
+        :return: Найденный веб-элемент.
+        """
+        return self.driver.find_element(*locator)
 
     def find_elements(self, by: By, value: str):
         """Находит несколько элементов на странице по указанным параметрам."""
@@ -19,7 +24,7 @@ class BasePage:
     def wait_for_body_to_load(self, timeout=10):
         """Ожидает, пока элемент <body> не станет полностью загруженным."""
         wait = WebDriverWait(self.driver, timeout)
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
+        wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
 
     def find_and_click_element(self, locator, timeout=10):
         """Находит элемент по локатору, ждет его доступности и кликает по нему."""
@@ -40,7 +45,8 @@ class BasePage:
 
         # Прокрутка до элемента
         self.driver.execute_script(
-            "arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element
+            "arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});",
+            element,
         )
 
     def get_current_url(self):
@@ -63,4 +69,20 @@ class BasePage:
 
     def assert_url_is_equal(self, expected_url):
         current_url = self.get_current_url()
-        assert expected_url == current_url, f"Ожидали url {expected_url}, получили {current_url}"
+        assert (
+            expected_url == current_url
+        ), f"Ожидали url {expected_url}, получили {current_url}"
+
+    def find_and_send(self, which, key):
+        self.driver.find_element(*which).send_keys(key)
+
+    def check_partners_list(self, list_locator: tuple, item_selector: str):
+        """Проверяет отображение списка партнёров и наличие элементов."""
+        partners_list = self.driver.find_element(*list_locator)
+        assert (
+            partners_list.is_displayed()
+        ), "LIST_OF_PARTNERS элемент не отображается на странице"
+        elements = partners_list.find_elements(By.CSS_SELECTOR, item_selector)
+        count = len(elements)
+        assert count > 0, "Нет элементов с классом 'sbisru-Contacts-List__name'"
+        print(f"Количество элементов с классом '{item_selector}': {count}")
