@@ -1,4 +1,5 @@
-import time
+import allure
+from loguru import logger
 import pytest
 from selenium.webdriver.common.by import By
 from tests.pages.base_page import BasePage
@@ -13,6 +14,7 @@ class SbisSite(BasePage):
     а также для выполнения проверок.
     """
 
+    @allure.step("Запускаем первый сценарий")
     def test_first_scenario(self):
         """
         Первый сценарий тестирования.
@@ -31,26 +33,31 @@ class SbisSite(BasePage):
         Если какой-либо из шагов завершится неудачно, тест зафиксирует ошибку.
         """
         try:
+            logger.info("Нажимаем на кнопку 'Контакты'.")
             self.find_and_click_element(Locators.CONTACTS_BUTTON)
+            logger.info("Нажимаем на баннер клиента.")
+            self.wait_for_element(Locators.CLIENT_BANNER)
             self.find_and_click_element(Locators.CLIENT_BANNER)
-            time.sleep(1)  # ожидание полной загрузки элемента
-
-            # Переключаемся на последнюю вкладку
+            logger.info("Переключаемся на последнюю вкладку.")
             self.switch_to_last_tab()
-
+            logger.info("Прокручиваем к основному блоку контента.")
             self.scroll_to_element(Locators.MAIN_CONTENT_BLOCK)
             self.wait_for_text_in_element(
-                Locators.MAIN_CONTENT_BLOCK, "Сила в людях", 10
-            )
-            time.sleep(1)  # ожидание полной загрузки элемента
-
+                Locators.MAIN_CONTENT_BLOCK, "Сила в людях")
+            logger.info("Нажимаем на кнопку 'Подробнее'.")
             self.find_and_click_element(Locators.DETAILS_BUTTON)
             self.assert_url_is_equal("https://tensor.ru/about")
-
+            logger.info("Прокручиваем к блоку 'Работаем'.")
             self.scroll_to_element(Locators.WORK_BLOCK)
             self.assert_all_images_equal()
-
         except Exception as e:
+
+            allure.attach(
+                self.driver.get_screenshot_as_png(),
+                name="screenshot",
+                attachment_type=allure.attachment_type.PNG,
+            )
+
             pytest.fail(f"Ошибка теста сценария 1: {e}")
 
     def assert_all_images_equal(self):
@@ -85,6 +92,7 @@ class SbisSite(BasePage):
         except Exception as e:
             pytest.fail(f"Ошибка теста проверки изображения: {e}")
 
+    @allure.step("Запускаем второй сценарий")
     def test_second_scenario(self):
         """
         Второй сценарий тестирования.
@@ -106,23 +114,19 @@ class SbisSite(BasePage):
         try:
             self.find_and_click_element(Locators.CONTACTS_BUTTON)
             self.wait_for_text_in_element(
-                Locators.LOCATION_DEFINE, "Самарская обл.", 10
-            )
-            self.wait_for_text_in_element(Locators.CITY_LOCATION_DEFINE, "Самара", 10)
+                Locators.LOCATION_DEFINE, "Самарская обл.")
+            self.wait_for_text_in_element(Locators.CITY_LOCATION_DEFINE, "Самара")
             self.check_partners_list(
                 Locators.LIST_OF_PARTNERS, "div.sbisru-Contacts-List__name"
             )
             self.find_and_click_element(Locators.SELECT_REGION)
-            time.sleep(1)
             self.find_and_send(Locators.INPUT_NAME_REGION, "Камчатский край")
-            time.sleep(1)
+            self.wait_for_element(Locators.BUTTON_REGION_KAMCHATKA)
             self.find_and_click_element(Locators.BUTTON_REGION_KAMCHATKA)
             self.wait_for_text_in_element(
-                Locators.LOCATION_DEFINE, "Камчатский край", 10
-            )
+                Locators.LOCATION_DEFINE, "Камчатский край")
             self.wait_for_text_in_element(
-                Locators.CITY_LOCATION_DEFINE, "Петропавловск-Камчатский", 10
-            )
+                Locators.CITY_LOCATION_DEFINE, "Петропавловск-Камчатский")
             self.check_partners_list(
                 Locators.LIST_OF_PARTNERS, "div.sbisru-Contacts-List__name"
             )
@@ -137,4 +141,10 @@ class SbisSite(BasePage):
                 "Камчатский край" in title
             ), f"Title does not contain 'Камчатский край': {title}"
         except Exception as e:
+            allure.attach(
+                self.driver.get_screenshot_as_png(),
+                name="screenshot",
+                attachment_type=allure.attachment_type.PNG,
+            )
+
             pytest.fail(f"Ошибка теста сценария 2: {e}")

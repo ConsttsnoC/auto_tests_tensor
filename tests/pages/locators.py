@@ -2,6 +2,13 @@ from selenium.webdriver.common.by import By
 
 
 class Locators:
+    """
+    Класс для хранения локаторов веб-элементов.
+
+    Этот класс используется для определения и группировки локаторов, которые
+    будут использованы на различных страницах веб-приложения.
+    """
+
     CONTACTS_BUTTON = (
         By.CSS_SELECTOR,
         "li.sbisru-Header__menu-item.sbisru-Header__menu-item-1 a.sbisru-Header__menu-link",
