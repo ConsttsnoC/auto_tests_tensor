@@ -14,3 +14,10 @@ class TestSbisSite:
     ):
         page = SbisSite(open_website_and_clear)
         page.test_second_scenario()
+
+    def test_file_search_and_download_sbis_site_third_scenario(
+        self, open_website_and_clear
+    ):
+        page = SbisSite(open_website_and_clear)
+        page.file_search_and_download_sbis_site_third_scenario()
+

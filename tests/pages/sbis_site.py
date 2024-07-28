@@ -1,3 +1,6 @@
+import os
+import time
+
 import allure
 from loguru import logger
 import pytest
@@ -148,3 +151,58 @@ class SbisSite(BasePage):
             )
 
             pytest.fail(f"Ошибка теста сценария 2: {e}")
+
+    @allure.step("Запускаем третий сценарий")
+    def file_search_and_download_sbis_site_third_scenario(self):
+        try:
+            self.scroll_to_element(Locators.button_download_local_versions)
+            self.find_and_click_element(Locators.button_download_local_versions)
+            time.sleep(1)
+            self.find_and_click_element(Locators.DOWNLOAD_FILE)
+            time.sleep(5)
+
+            project_dir = os.path.abspath(os.path.dirname(__file__))
+            download_dir = os.path.join(project_dir, "..\downloads")
+
+            if not os.path.exists(download_dir):
+                logger.error(f"Не удалось найти директорию: {download_dir}")
+                pytest.fail(f"Директория не найдена: {download_dir}")
+
+            files = os.listdir(download_dir)
+            if not files:
+                logger.error("В директории нет файлов.")
+                pytest.fail("В директории нет файлов.")
+
+            latest_file = max(
+                files,
+                key=lambda f: os.path.getmtime(os.path.join(download_dir, f))
+            )
+            latest_file_path = os.path.join(download_dir, latest_file)
+
+            file_size = os.path.getsize(latest_file_path)
+            file_size_mb = file_size / (1024 * 1024)
+            logger.info(f"Размер последнего скачанного файла '{latest_file}': {file_size_mb:.2f} МБ")
+
+            expected_size_mb = 11.05
+            tolerance_mb = 0.01  # Допустимая погрешность
+            assert abs(file_size_mb - expected_size_mb) <= tolerance_mb, (
+                f"Размер файла ({file_size_mb:.2f} МБ) не соответствует ожидаемому значению "
+                f"({expected_size_mb} МБ)."
+            )
+
+            for file_name in files:
+                file_path = os.path.join(download_dir, file_name)
+                try:
+                    os.remove(file_path)
+                    logger.info(f"Удалён файл: {file_path}")
+                except Exception as e:
+                    logger.error(f"Не удалось удалить файл {file_path}: {e}")
+
+        except Exception as e:
+            allure.attach(
+                self.driver.get_screenshot_as_png(),
+                name="screenshot",
+                attachment_type=allure.attachment_type.PNG,
+            )
+            pytest.fail(f"Ошибка теста сценария 3: {e}")
+
