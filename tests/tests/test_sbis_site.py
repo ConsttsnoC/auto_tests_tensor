@@ -3,21 +3,14 @@ from tests.pages.sbis_site import SbisSite
 
 class TestSbisSite:
 
-    def test_navigate_and_validate_sbis_site_first_scenario(
-        self, open_website_and_clear
-    ):
+    def test_navigate_and_validate_tensor_banner_and_size_images(self, open_website_and_clear):
         page = SbisSite(open_website_and_clear)
         page.test_first_scenario()
 
-    def test_navigate_and_validate_sbis_site_second_scenario(
-        self, open_website_and_clear
-    ):
+    def test_test_navigate_and_validate_region_and_partners(self, open_website_and_clear):
         page = SbisSite(open_website_and_clear)
         page.test_second_scenario()
 
-    def test_file_search_and_download_sbis_site_third_scenario(
-        self, open_website_and_clear
-    ):
+    def test_download_and_verify_sbis_plugin(self, open_website_and_clear):
         page = SbisSite(open_website_and_clear)
-        page.file_search_and_download_sbis_site_third_scenario()
-
+        page.test_third_scenario()

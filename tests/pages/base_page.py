@@ -176,4 +176,3 @@ class BasePage:
             EC.presence_of_element_located(locator)
         )
         return element
-

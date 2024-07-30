@@ -51,7 +51,16 @@ class Locators:
         By.CSS_SELECTOR,
         "#popup > div.controls-Popup.ws-float-area-show-complete.controls-Popup_shown.controls_themes__wrapper.controls-Scroll_webkitOverflowScrollingTouch.controls-Popup__lastItem > div > div > div > div > div.sbis_ru-Region-Panel.sbis_ru-Region-Panel-l > div > ul > li > span > span > span",
     )
-    button_download_local_versions = (By.CSS_SELECTOR, '#container > div.sbisru-Footer.sbisru-Footer__scheme--default > div.sbis_ru-container > div.sbisru-Footer__container > div:nth-child(3) > ul > li:nth-child(8)')
-    SBIS_PLAGIN = (By.CSS_SELECTOR, '#ws-us19b255351722193577389 > div.controls-TabButton__inner')
-    BUTTON_WINDOWS = (By.CSS_SELECTOR, '#ws-qabb5gn2eni1722193577415 > div.controls-TabButton__inner > div > div > span')
-    DOWNLOAD_FILE = (By.XPATH, '/html/body/div[1]/div[2]/div[1]/div/div[1]/div/div/div/div[2]/div/div[1]/div/div/div[2]/div[1]/div[2]/div[2]')
+    BUTTON_DOWNLOAD_LOCAL_VERSIONS = (
+        By.CSS_SELECTOR,
+        "#container > div.sbisru-Footer.sbisru-Footer__scheme--default > div.sbis_ru-container > div.sbisru-Footer__container > div:nth-child(3) > ul > li:nth-child(8)",
+    )
+    SBIS_PLAGIN = (
+        By.CSS_SELECTOR,
+        "#ws-us19b255351722193577389 > div.controls-TabButton__inner",
+    )
+    BUTTON_WINDOWS = (
+        By.CSS_SELECTOR,
+        "#ws-qabb5gn2eni1722193577415 > div.controls-TabButton__inner > div > div > span",
+    )
+    DOWNLOAD_FILE = (By.XPATH, "//div[@class='sbis_ru-DownloadNew-loadLink']//a[@class='sbis_ru-DownloadNew-loadLink__link js-link']")
