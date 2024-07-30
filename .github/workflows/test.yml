@@ -1,0 +1,30 @@
+# Конфигурация для автоматического запуска тестов в GitHub Action при каждом пуше
+name: Test
+
+on:
+  push:
+    branches:
+      - master  # Запускать тесты только при пуше в ветку master
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest  # Использовать образ ОС Ubuntu с последней версией
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2  # Использовать действие для проверки кода
+
+    - name: Set up Python
+      uses: actions/setup-python@v2  # Использовать действие для настройки Python
+      with:
+          python-version: '3.x'  # Использовать Python версии 3.x
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt   
+
+    - name: Run tests
+      run: |
+        pytest -s
