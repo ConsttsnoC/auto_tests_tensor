@@ -63,4 +63,7 @@ class Locators:
         By.CSS_SELECTOR,
         "#ws-qabb5gn2eni1722193577415 > div.controls-TabButton__inner > div > div > span",
     )
-    DOWNLOAD_FILE = (By.XPATH, "//div[@class='sbis_ru-DownloadNew-loadLink']//a[@class='sbis_ru-DownloadNew-loadLink__link js-link']")
+    DOWNLOAD_FILE = (
+        By.XPATH,
+        "//div[@class='sbis_ru-DownloadNew-loadLink']//a[@class='sbis_ru-DownloadNew-loadLink__link js-link']",
+    )

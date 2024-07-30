@@ -16,7 +16,9 @@ class SbisSite(BasePage):
     а также для выполнения проверок.
     """
 
-    @allure.step("Проверка, что все изображения в указанном блоке имеют одинаковую ширину и высоту")
+    @allure.step(
+        "Проверка, что все изображения в указанном блоке имеют одинаковую ширину и высоту"
+    )
     def assert_all_images_equal(self):
         """
         Проверка, что все изображения в указанном блоке имеют одинаковую ширину и высоту.
@@ -38,7 +40,9 @@ class SbisSite(BasePage):
             first_width = images[0].get_attribute("width")
             first_height = images[0].get_attribute("height")
 
-            logger.info(f"Ожидаемая ширина: {first_width}, Ожидаемая высота: {first_height}")
+            logger.info(
+                f"Ожидаемая ширина: {first_width}, Ожидаемая высота: {first_height}"
+            )
 
             for img in images:
                 width = img.get_attribute("width")
@@ -61,7 +65,9 @@ class SbisSite(BasePage):
             )
             pytest.fail(f"Ошибка теста проверки изображения: {e}")
 
-    @allure.step("Загрузка и проверка файла на соответствие его размеру, очищение директории")
+    @allure.step(
+        "Загрузка и проверка файла на соответствие его размеру, очищение директории"
+    )
     def download_and_verify_file_size_and_clear_directory(self):
         try:
             # Получение пути к директории проекта и определение пути к директории загрузок
@@ -86,7 +92,9 @@ class SbisSite(BasePage):
             # Получение размера последнего загруженного файла в мегабайтах
             file_size = os.path.getsize(latest_file_path)
             file_size_mb = file_size / (1024 * 1024)
-            logger.info(f"Размер последнего скачанного файла '{latest_file}': {file_size_mb:.2f} МБ")
+            logger.info(
+                f"Размер последнего скачанного файла '{latest_file}': {file_size_mb:.2f} МБ"
+            )
             # Ожидаемый размер файла и допустимая погрешность
             expected_size_mb = 11.05
             tolerance_mb = 0.01  # Допустимая погрешность
@@ -145,7 +153,6 @@ class SbisSite(BasePage):
             self.scroll_to_element(Locators.MAIN_CONTENT_BLOCK)
             self.wait_for_text_in_element(Locators.MAIN_CONTENT_BLOCK, "Сила в людях")
             logger.info("Нажимаем на кнопку 'Подробнее'.")
-            time.sleep(2)
             self.find_and_click_element(Locators.DETAILS_BUTTON)
             self.assert_url_is_equal("https://tensor.ru/about")
             logger.info("Прокручиваем к блоку 'Работаем'.")
@@ -184,9 +191,13 @@ class SbisSite(BasePage):
             logger.info("Нажимаем на кнопку 'Контакты'")
             self.find_and_click_element(Locators.CONTACTS_BUTTON)
             logger.info("Проверяем, что местоположение определено как 'Самарская обл.'")
-            self.wait_for_text_in_element(Locators.LOCATION_DEFINE, "Самарская обл.")
+            self.wait_for_text_in_element(
+                Locators.LOCATION_DEFINE, "Самарская обл."
+            )  # можно заменить на любой регион
             logger.info("Проверяем, что город определен как 'Самара'")
-            self.wait_for_text_in_element(Locators.CITY_LOCATION_DEFINE, "Самара")
+            self.wait_for_text_in_element(
+                Locators.CITY_LOCATION_DEFINE, "Самара"
+            )  # можно заменить на любой город
             logger.info("Проверяем список партнеров для Самарской области")
             self.check_partners_list(
                 Locators.LIST_OF_PARTNERS, "div.sbisru-Contacts-List__name"
@@ -240,7 +251,7 @@ class SbisSite(BasePage):
             logger.info("Нажимаем на элемент для скачивания файла")
             self.find_and_click_element(Locators.DOWNLOAD_FILE)
             logger.info("Ожидаем завершение загрузки файла")
-            time.sleep(3) #ожидание окончания загрузки файла
+            time.sleep(3)  # ожидание окончания загрузки файла
             logger.info("Проверяем размер загруженного файла и очищаем директорию")
             self.download_and_verify_file_size_and_clear_directory()
 
