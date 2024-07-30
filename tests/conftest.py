@@ -24,7 +24,7 @@ def driver(request):
     """
     # Определяем путь к директории проекта
     project_dir = os.path.abspath(os.path.dirname(__file__))
-    download_dir = os.path.join(project_dir, "downloads")  # Путь к папке для загрузок
+    download_dir = os.path.join(project_dir, "download")  # Путь к папке для загрузок
 
     if not os.path.exists(download_dir):
         os.makedirs(download_dir)

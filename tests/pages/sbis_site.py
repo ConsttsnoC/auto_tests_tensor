@@ -66,7 +66,7 @@ class SbisSite(BasePage):
         try:
             # Получение пути к директории проекта и определение пути к директории загрузок
             project_dir = os.path.abspath(os.path.dirname(__file__))
-            download_dir = os.path.join(project_dir, "..\downloads")
+            download_dir = os.path.join(project_dir, "..\download")
             logger.info(f"Путь к директории загрузок: {download_dir}")
             # Проверка наличия директории загрузок
             if not os.path.exists(download_dir):
@@ -145,6 +145,7 @@ class SbisSite(BasePage):
             self.scroll_to_element(Locators.MAIN_CONTENT_BLOCK)
             self.wait_for_text_in_element(Locators.MAIN_CONTENT_BLOCK, "Сила в людях")
             logger.info("Нажимаем на кнопку 'Подробнее'.")
+            time.sleep(2)
             self.find_and_click_element(Locators.DETAILS_BUTTON)
             self.assert_url_is_equal("https://tensor.ru/about")
             logger.info("Прокручиваем к блоку 'Работаем'.")
